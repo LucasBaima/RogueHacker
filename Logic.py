@@ -13,7 +13,7 @@
 # Variaveis sao os nomes exatos das chaves do inventario.
 
 
-def _preparar_formula(formula: str, inventario: dict[str, bool]) -> str:
+def _preparar_formula(formula: str, inventario: dict[str, bool]) -> str:    #Tradução
     
        for variavel, valor in inventario.items():
         formula = formula.replace(variavel, str(valor))
@@ -32,7 +32,7 @@ def _preparar_formula(formula: str, inventario: dict[str, bool]) -> str:
    
    
    
-def avaliar(formula: str, inventario: dict[str, bool]) -> bool:
+def avaliar(formula: str, inventario: dict[str, bool]) -> bool:    #Avaliação
     
 
     # Preparação a formula substituindo variaveis e operadores.
@@ -43,7 +43,6 @@ def avaliar(formula: str, inventario: dict[str, bool]) -> bool:
         # E seguro aqui porque controla o conteudo:
         # a formula so contem True, False, and, or, not e parenteses.
         resultado = eval(formula_python)
-
         # Garante que o retorno e sempre bool puro,
         # mesmo que eval retorne outro tipo truthy/falsy.
         return bool(resultado)
@@ -53,3 +52,39 @@ def avaliar(formula: str, inventario: dict[str, bool]) -> bool:
         # parentese faltando, etc.), retorna False por seguranca.
         # A porta permanece fechada em caso de erro.
         return False
+    
+    
+    
+ 
+def diagnosticar(formula: str, inventario: dict[str, bool]) -> dict:
+    ##Versao expandida do avaliador que retorna o estado de cada
+    #variavel individualmente, alem do resultado final.
+ 
+    #Util para o jogo exibir ao player quais condicoes
+    #foram satisfeitas e quais ainda faltam.
+    
+    # Avalia o resultado final da formula com o inventario atual.
+    resultado = avaliar(formula, inventario)
+    
+    
+    # Percorre o inventario completo do player e filtra
+    # apenas as variaveis cujo nome aparece na formula.
+    # Evita poluir o diagnostico com itens irrelevantes.
+    variaveis_na_formula = {}
+    for nome, valor in inventario.items():
+        if nome in formula:
+            variaveis_na_formula[nome] = valor
+
+    # Monta e retorna o dicionario de diagnostico.
+    diagnostico = {}
+    diagnostico["resultado"] = resultado
+    diagnostico["formula"]   = formula
+    diagnostico["variaveis"] = variaveis_na_formula
+
+    return diagnostico
+
+ 
+    
+ 
+   
+ 
