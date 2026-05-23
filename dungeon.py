@@ -49,3 +49,5 @@ def loadgame(mapa, player, inimigos, porta, firewall, paredes, exploit):
 
 
 #as posições dos objetos (player, inimigos, items etc) devem ser calculadas ANTES de chamar as funções, esse arquivo não calcula movimento e colisões
+
+
