@@ -49,6 +49,42 @@ def loadgame(mapa, player, inimigos, porta, firewall, paredes, exploit):
   return mapa
 
 
-#as posições dos objetos (player, inimigos, items etc) devem ser calculadas ANTES de chamar as funções, esse arquivo não calcula movimento e colisões
+#chamar essa função quando for a vez do jogador se mover
+def runplayer(mapa, player, itens, inimigos, formula):
+  #apaga o sprite da posição passada
+  mapa[player.y][player.x] = ' '
+  direcao = input("escolha a direção ")
+  des = player.calcular_destino(direcao)
+  #caso destino seja valido, checar colisão com inimigos, itens e a porta
+  if(des != None and !player.colidir_parede(mapa[des[1]][des[0]])):
+    player.mover(des)
+    if(player.colidir_inimigo(inimigos)):
+      print("perdeu")
+      return
+    for item in itens:
+      if(item.x == player.x and item.y == player.y):
+        #caso o player esteja no mesmo lugar que um item, coleta esse item
+        player.coletar(item.nome)
+    if(player.x == porta.x and player.y == porta.y):
+      if(avaliar(formula, player.inventario)):
+        #caso a formula seja aceita, print ganhou
+        print("ganhou")
+        return
+  #print o mapa
+  mapa = loadplayer(mapa, player)
+  print(mapa)
+  return
 
-
+#rodar essa função para cada inimigo
+#novox e novoy são as coordenadas para quais o inimigo vai se mover nesse turno
+def runinimigo(mapa, player, itens, inimigo, formula, novox, novoy):
+  #tira o inimigo da posição passada
+  mapa[inimigo.y][inimigo.x] = ' '
+  #atualiza a posição do inimigo e checa colião com o player, caso tenha colisão print gameover
+  if(inimigo.mov(novox, novoy, player)):
+    print("gameover")
+    return
+  #print o mapa
+  mapa = loadanti(mapa, inimigos)
+  print(mapa)
+  return
