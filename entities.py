@@ -10,7 +10,11 @@ class inimigo:
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
-	def mov(self, novo_x, novo_y):
+	def mov(self, novo_x, novo_y, p):
+		# move a posicao do inimigo e retorna true caso colida com player
 		self.x = novo_x
 		self.y = novo_y
-		
+		if(self.x == p.x and self.y == p.y):
+			return True
+		else:
+			return False
