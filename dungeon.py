@@ -77,7 +77,7 @@ def runplayer(mapa, player, itens, inimigos, formula):
 
 #rodar essa função para cada inimigo
 #novox e novoy são as coordenadas para quais o inimigo vai se mover nesse turno
-def runinimigo(mapa, player, itens, inimigo, formula, novox, novoy):
+def runinimigo(mapa, player, inimigo, novox, novoy):
   #tira o inimigo da posição passada
   mapa[inimigo.y][inimigo.x] = ' '
   #atualiza a posição do inimigo e checa colião com o player, caso tenha colisão print gameover
