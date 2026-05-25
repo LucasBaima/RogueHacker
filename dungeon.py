@@ -34,7 +34,8 @@ def loadparede(mapa, paredes):
     mapa[i.y][i.x] = '/'
   return mapa
 def loadexploit(mapa, exploit):
-  mapa[exploit.y][exploit.x] = '$'
+  if(!exploit.state):
+    mapa[exploit.y][exploit.x] = '$'
   return mapa
 
 #essa função combina todos os loads, caso não queira carregar cada entidade individualmente
