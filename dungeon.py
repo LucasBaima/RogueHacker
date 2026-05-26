@@ -1,3 +1,5 @@
+from Logic import avaliar
+
 def loadmapa(tamanhox, tamanhoy):
   #preenche o mapa com espaços vazios de acordo com o tamanho (x, y) da sala
 
@@ -34,9 +36,11 @@ def loadparede(mapa, paredes):
     mapa[i.y][i.x] = '/'
   return mapa
 def loadexploit(mapa, exploit):
-  if(!exploit.state):
-    mapa[exploit.y][exploit.x] = '$'
+  for exploit in exploit:
+    if not exploit.state:
+      mapa[exploit.y][exploit.x] = '$'
   return mapa
+  
 
 #essa função combina todos os loads, caso não queira carregar cada entidade individualmente
 def loadgame(mapa, player, inimigos, porta, firewall, paredes, exploit):
@@ -50,41 +54,49 @@ def loadgame(mapa, player, inimigos, porta, firewall, paredes, exploit):
 
 
 #chamar essa função quando for a vez do jogador se mover
-def runplayer(mapa, player, itens, inimigos, formula):
+def runplayer(mapa, player, itens, inimigos, formula, porta):
   #apaga o sprite da posição passada
   mapa[player.y][player.x] = ' '
   direcao = input("escolha a direção ")
   des = player.calcular_destino(direcao)
   #caso destino seja valido, checar colisão com inimigos, itens e a porta
-  if(des != None and !player.colidir_parede(mapa[des[1]][des[0]])):
-    player.mover(des)
+  if des is not None and 0 <= des[1] < len(mapa) and 0 <= des[0] < len(mapa[0]) and not player.colidir_parede(mapa[des[1]][des[0]]):
+    player.mover(des[0], des[1])
     if(player.colidir_inimigo(inimigos)):
-      print("perdeu")
-      return
+      return "perdeu"
     for item in itens:
       if(item.x == player.x and item.y == player.y):
         #caso o player esteja no mesmo lugar que um item, coleta esse item
         player.coletar(item.nome)
+        item.state = True
+        
+        
     if(player.x == porta.x and player.y == porta.y):
-      if(avaliar(formula, player.inventario)):
-        #caso a formula seja aceita, print ganhou
-        print("ganhou")
-        return
-  #print o mapa
-  mapa = loadplayer(mapa, player)
-  print(mapa)
-  return
+        from Logic import diagnosticar
+        resultado = diagnosticar(formula, player.inventario)  
+        if resultado["resultado"]:
+            return "ganhou"
+        else:
+            print("\n=== PORTA BLOQUEADA ===")
+            print(f"Formula: {resultado['formula']}")   #Lógica proposicional visível para o jogador
+            for var, val in resultado["variaveis"].items():
+                status = "✓" if val else "✗"
+                print(f"  {status} {var}: {val}")
+            print("=======================\n")
+            input("pressione Enter para continuar...")
+            player.mover(player.x - (des[0] - player.x), player.y - (des[1] - player.y))
+            
+            
+  
 
 #rodar essa função para cada inimigo
 #novox e novoy são as coordenadas para quais o inimigo vai se mover nesse turno
-def runinimigo(mapa, player, inimigo, novox, novoy):
+def runinimigo(mapa, player, inimigo, novox, novoy, inimigos):
   #tira o inimigo da posição passada
   mapa[inimigo.y][inimigo.x] = ' '
   #atualiza a posição do inimigo e checa colião com o player, caso tenha colisão print gameover
   if(inimigo.mov(novox, novoy, player)):
-    print("gameover")
-    return
+    return "gameover"
   #print o mapa
   mapa = loadanti(mapa, inimigos)
-  print(mapa)
-  return
+  return "continua"
