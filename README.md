@@ -55,8 +55,8 @@ Cada porta do jogo é uma **fórmula em lógica proposicional**. Seu inventário
 
 ## 📐 Contexto Acadêmico
 
-**Disciplina:** Fundamentos de Sistemas (FDS)
-**Período:** 2B — 2026.1
+**Disciplina:** (Lógica matemática para computação)
+**Período:** 3B — 2026.1
 **Tópicos aplicados:**
 - Lógica Proposicional
 - Álgebra Booleana
